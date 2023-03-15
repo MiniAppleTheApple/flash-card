@@ -18,13 +18,13 @@ type Selected = {
 }
 
 type CardType {
-	text: string,
-	answer: string,
+  text: string,
+  answer: string,
 }
 
 type DeckType {
-	name: string,
-	cards: Card[],
+  name: string,
+  cards: Card[],
 }
 
 type MainPageProps = {
@@ -36,7 +36,7 @@ type StartPageProps = {
 }
 
 type CardsProps = {
-	cards: Card[],
-	remove: (index: number) => void,
-	edit: (index: number) => void,
+  cards: Card[],
+  remove: (index: number) => void,
+  edit: (index: number) => void,
 }
