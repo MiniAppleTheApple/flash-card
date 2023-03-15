@@ -1,21 +1,21 @@
-type NormalState = {
-	type: "normal",
-	decks: DeckType[],
+type Page = "start" | "main" 
+
+type AddCard = {
+	type: "add",
+	card: CardType,
 }
 
-type DeckSelectedState = {
-	type: "deck_selected"
-	selected: number,
-	decks: DeckType[],
-	newCard: CardType,
+type EditCard = {
+	type: "edit",
+	index: number,
 }
 
-type StartState = {
-	type: "start"
-	cards: CardType[],
-}
+type CardModification = AddCard | EditCard
 
-type State = NormalState | DeckSelectedState | StartState 
+type Selected = {
+	index: number,
+	action: CardModification, 
+}
 
 type CardType {
 	text: string,
@@ -27,19 +27,16 @@ type DeckType {
 	cards: Card[],
 }
 
-type MainPageProps {
-  onClick: (index: number) => void,
-  cards: Card[],
-  selected: number,
-  onSubmit: (event: Event) => void,
-  setCard: (card: CardType) => void,
-  card: CardType, 
-  deleteCard: (index: number) => void,
-  editCard
+type MainPageProps = {
+  setPage: (f: (page: Page) => Page) => void 
 }
 
-type CardsProps {
+type StartPageProps = {
+  setPage: (f: (page: Page) => Page) => void 
+}
+
+type CardsProps = {
 	cards: Card[],
-	deleteCard: (index: number) => void
-	editCard: (index: number) => void
+	remove: (index: number) => void,
+	edit: (index: number) => void,
 }

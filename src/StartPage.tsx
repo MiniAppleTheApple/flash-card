@@ -1,5 +1,10 @@
-const StartPage: React.FC<void> = (_props) => (
-  <div></div>
+const StartPage: React.FC<void> = ({setPage}) => (
+  <div>
+    <h1>
+      Start Page
+    </h1>
+    <button onClick={e => setPage("main")}>Back</button>
+  </div>
 )
 
 export default StartPage
