@@ -10,30 +10,69 @@ const defaultCard = {
   answer: "",
 }
 
+const updateDeck = (deck: DeckType, {action, card}: Selected): DeckType => {
+  switch (action.type) {
+  case "add":
+    return {...deck, cards: [...deck.cards, card]}
+  case "edit":
+    return {...deck, cards: deck.cards.map((x, index) => index === action.index ? card : x)}
+  default:
+    return deck
+  }
+}
+
+const displayAction = (action: CardsModification) => {
+  switch(action.type) {
+  case "add":
+    return "Add Card"
+  case "edit":
+    return "Edit Card"
+  }
+}
+
 const MainPage : React.FC<MainPageProps> = ({setPage}) => {
-  const [decks, setDecks] = useState<DeckType>(defaultDecks)
+  const [decks, setDecks] = useState<DeckType[]>(defaultDecks)
   const [selected, setSelected] = useState<Selected | null>(null)
 
-  const deckOnClick = index => setSelected({index, cardToAdd: defaultCard})
+  const deckOnClick = index => setSelected({
+    index,
+    card: defaultCard,
+    action: {
+      type: "add",
+    }
+  })
   const onSubmit = (event: Event) => {
-    const card = selected.cardToAdd
+    const card = selected.card
     event.preventDefault()
     if (selected !== null && [card.text, card.answer].every(x => x !== "")) {
-      setDecks(decks => decks.map((deck, index) => index === selected.index ? {...deck, cards: [...deck.cards, card]} : deck))
-      setSelected({...selected, cardToAdd: defaultCard})
+      setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
+      setSelected({
+        ...selected,
+        card: defaultCard,
+        action: {
+          type: "add"
+        }
+      })
     }
   }
 
   const onTextChange = e => setSelected(
-    selected => ({...selected, cardToAdd: {...selected.cardToAdd, text: e.target.value}})
+    selected => ({...selected, card: {...selected.card, text: e.target.value}})
   )
 
   const onAnswerChange = e => setSelected(
-    selected => ({...selected, cardToAdd: {...selected.cardToAdd, answer: e.target.value}})
+    selected => ({...selected, card: {...selected.card, answer: e.target.value}})
   )
 
-  const edit = index => {
-
+  const edit = (index: number) => {
+    setSelected({
+      ...selected,
+      card: decks[selected.index].cards[index],
+      action: {
+        type: "edit",
+        index: index,
+      }
+    })
   }
 
   const remove = index => {
@@ -57,8 +96,8 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
           <div>
             <h1>Cards</h1>
             <Cards cards={decks[selected.index].cards} remove={remove} edit={edit}/>
-            <h1>Add new</h1>
-            <CardForm card={selected.cardToAdd} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+            <h1>{displayAction(selected.action)}</h1>
+            <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
           </div>
         )
       }

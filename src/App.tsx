@@ -2,9 +2,7 @@ import { useState } from "react"
 import MainPage from "./MainPage"
 import StartPage from "./StartPage"
 
-interface Props {}
-
-const App : React.FC<Props> = () => {
+const App : React.FC<{}> = () => {
   const [page, setPage] = useState<"start" | "main">("main")
 
   switch (page) {

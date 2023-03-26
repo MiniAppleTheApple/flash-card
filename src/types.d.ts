@@ -17,26 +17,26 @@ type Selected = {
 	action: CardModification, 
 }
 
-type CardType {
+type CardType = {
   text: string,
   answer: string,
 }
 
-type DeckType {
+type DeckType = {
   name: string,
   cards: Card[],
 }
 
 type MainPageProps = {
-  setPage: (f: (page: Page) => Page) => void 
+  setPage: Dispatch<SetStateAction<"main" | "start">>,
 }
 
 type StartPageProps = {
-  setPage: (f: (page: Page) => Page) => void 
+  setPage: Dispatch<SetStateAction<"main" | "start">>,
 }
 
 type CardsProps = {
   cards: Card[],
-  remove: (index: number) => void,
-  edit: (index: number) => void,
+  remove: Dispatch<SetStateAction<number>>,
+  edit: Dispatch<SetStateAction<number>>,
 }

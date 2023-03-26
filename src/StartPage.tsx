@@ -1,4 +1,4 @@
-const StartPage: React.FC<void> = ({setPage}) => (
+const StartPage: React.FC<StartPageProps> = ({setPage}) => (
   <div>
     <h1>
       Start Page
