@@ -10,10 +10,11 @@ type EditCard = {
 	index: number,
 }
 
-type CardModification = AddCard | EditCard
+type CardsModification = AddCard | EditCard
 
 type Selected = {
 	index: number,
+	card: CardType,
 	action: CardModification, 
 }
 

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, ChangeEvent } from "react"
 import Decks from "./Decks"
 import Cards from "./Cards"
 import CardForm from "./CardForm"
@@ -34,15 +34,15 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
   const [decks, setDecks] = useState<DeckType[]>(defaultDecks)
   const [selected, setSelected] = useState<Selected | null>(null)
 
-  const deckOnClick = index => setSelected({
+  const deckOnClick = (index: number) => setSelected({
     index,
     card: defaultCard,
     action: {
       type: "add",
     }
   })
-  const onSubmit = (event: Event) => {
-    const card = selected.card
+  const onSubmit = (selected: Selected) => (event: Event) => {
+    const { card } = selected 
     event.preventDefault()
     if (selected !== null && [card.text, card.answer].every(x => x !== "")) {
       setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
@@ -56,33 +56,35 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
     }
   }
 
-  const onTextChange = e => setSelected(
-    selected => ({...selected, card: {...selected.card, text: e.target.value}})
+  const onTextChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
+    selected => (selected === null || e.target === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
   )
 
-  const onAnswerChange = e => setSelected(
-    selected => ({...selected, card: {...selected.card, answer: e.target.value}})
+  const onAnswerChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
+    selected => (selected === null || e.target === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
   )
 
   const edit = (index: number) => {
-    setSelected({
+    setSelected(selected => (selected === null ? null : {
       ...selected,
       card: decks[selected.index].cards[index],
       action: {
         type: "edit",
         index: index,
-      }
-    })
+      },
+    }))
   }
 
-  const remove = index => {
-    setDecks(
-      decks => decks.map(
-        (deck, deckIndex) => deckIndex === selected.index ? 
-        {...deck, cards: deck.cards.filter((card, cardIndex) => index !== cardIndex)} :
-        deck
+  const remove = (index: number) => {
+    if (selected !== null) {
+      setDecks(
+        decks => decks.map(
+          (deck, deckIndex) => deckIndex === selected.index ? 
+          {...deck, cards: deck.cards.filter((card, cardIndex) => index !== cardIndex)} :
+          deck
+        )
       )
-    )
+    }
   }
 
   return (
