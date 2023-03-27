@@ -41,27 +41,30 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
       type: "add",
     }
   })
-  const onSubmit = (selected: Selected) => (event: Event) => {
-    const { card } = selected 
+
+  const onSubmit = (event: Event) => {
     event.preventDefault()
-    if (selected !== null && [card.text, card.answer].every(x => x !== "")) {
-      setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
-      setSelected({
-        ...selected,
-        card: defaultCard,
-        action: {
-          type: "add"
-        }
-      })
+    if (selected !== null) {
+      const { card } = selected 
+      if([card.text, card.answer].every(x => x !== "")) {
+        setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
+        setSelected({
+          ...selected,
+          card: defaultCard,
+          action: {
+            type: "add"
+          }
+        })
+      }
     }
   }
 
   const onTextChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null || e.target === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
+    selected => (selected === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
   )
 
   const onAnswerChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null || e.target === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
+    selected => (selected === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
   )
 
   const edit = (index: number) => {
