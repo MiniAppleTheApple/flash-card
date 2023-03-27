@@ -1,6 +1,6 @@
-import {useState, ChangeEvent} from "react"
+import {useState, MouseEvent} from "react"
 
-// TODO makes this implementation pure
+// TODO remove mutable data from this implementation 
 function shuffle<T>(array: T[]) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -13,13 +13,13 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
   const [deck, setDeck] = useState({...decks[index], cards: shuffle(decks[index].cards)})
   const [isShowed, setIsShowed] = useState(false)
 
-  const next = (event: ChangeEvent<HTMLElement>) => {
+  const next = (event: MouseEvent) => {
     if (deck.cards.length > 1) {
       setDeck({...deck, cards: deck.cards.slice(1, deck.cards.length)})
     }
   }
 
-  const showAnswer = (event: ChangeEvent<HTMLElement>) => {
+  const showAnswer = (event: MouseEvent) => {
     setIsShowed(true)
   }
 
