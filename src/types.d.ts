@@ -1,4 +1,11 @@
-type Page = "start" | "main" 
+type Page = {
+	type: "start",
+	decks: DeckType[],
+	index: number, 
+} | {
+	type: "main",
+	decks: DeckType[],
+}
 
 type AddCard = {
 	type: "add",
@@ -30,10 +37,13 @@ type DeckType = {
 
 type MainPageProps = {
   setPage: Dispatch<SetStateAction<"main" | "start">>,
+  decks: DeckType[],
 }
 
 type StartPageProps = {
   setPage: Dispatch<SetStateAction<"main" | "start">>,
+  index: number,
+  decks: DeckType[],
 }
 
 type CardsProps = {

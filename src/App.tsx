@@ -2,14 +2,16 @@ import { useState } from "react"
 import MainPage from "./MainPage"
 import StartPage from "./StartPage"
 
-const App : React.FC<{}> = () => {
-  const [page, setPage] = useState<"start" | "main">("main")
+import defaultDecks from "./default.json"
 
-  switch (page) {
+const App : React.FC<{}> = () => {
+  const [page, setPage] = useState<Page>({type: "main", decks: defaultDecks})
+
+  switch (page.type) {
   case "start":
-    return <StartPage setPage={setPage}/>
+    return <StartPage decks={page.decks} index={page.index} setPage={setPage}/>
   case "main":
-    return <MainPage setPage={setPage}/>
+    return <MainPage decks={page.decks} setPage={setPage}/>
   default:
     return <div>Which page is this?</div>
   }

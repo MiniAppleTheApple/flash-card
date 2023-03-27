@@ -3,8 +3,6 @@ import Decks from "./Decks"
 import Cards from "./Cards"
 import CardForm from "./CardForm"
 
-import defaultDecks from "./default.json"
-
 const defaultCard = {
   text: "",
   answer: "",
@@ -30,8 +28,9 @@ const displayAction = (action: CardsModification) => {
   }
 }
 
-const MainPage : React.FC<MainPageProps> = ({setPage}) => {
-  const [decks, setDecks] = useState<DeckType[]>(defaultDecks)
+const MainPage : React.FC<MainPageProps> = (props) => {
+  const {setPage} = props
+  const [decks, setDecks] = useState<DeckType[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
 
   const deckOnClick = (index: number) => setSelected({
@@ -44,18 +43,15 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
 
   const onSubmit = (event: Event) => {
     event.preventDefault()
-    if (selected !== null) {
-      const { card } = selected 
-      if([card.text, card.answer].every(x => x !== "")) {
-        setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
-        setSelected({
-          ...selected,
-          card: defaultCard,
-          action: {
-            type: "add"
-          }
-        })
-      }
+    if (selected !== null && [selected?.card?.text, selected?.card?.answer].every(x => x !== "")) {
+      setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
+      setSelected({
+        ...selected,
+        card: defaultCard,
+        action: {
+          type: "add"
+        }
+      })
     }
   }
 
@@ -94,11 +90,11 @@ const MainPage : React.FC<MainPageProps> = ({setPage}) => {
     <div>
       <h1>Decks</h1>
       <Decks deckOnClick={deckOnClick} decks={decks}/>
-      <button onClick={e => setPage("start")}>Start</button>
       {selected === null ? 
         null : 
         (
           <div>
+            <button onClick={e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
             <h1>Cards</h1>
             <Cards cards={decks[selected.index].cards} remove={remove} edit={edit}/>
             <h1>{displayAction(selected.action)}</h1>
