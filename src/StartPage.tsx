@@ -16,6 +16,9 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
   const next = (event: MouseEvent) => {
     if (deck.cards.length > 1) {
       setDeck({...deck, cards: deck.cards.slice(1, deck.cards.length)})
+      setIsShowed(false)
+    } else {
+      setPage({type: "main", decks})
     }
   }
 
