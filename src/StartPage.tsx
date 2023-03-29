@@ -1,4 +1,5 @@
-import {useState, MouseEvent} from "react"
+import { useState, MouseEvent } from "react"
+import { primaryButton, secondaryButton } from "./utils"
 
 // TODO remove mutable data from this implementation 
 function shuffle<T>(array: T[]) {
@@ -27,20 +28,17 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
   }
 
   return (
-    <div>
-      <h1>
-        Start Page
-      </h1>
-      <h1>{deck.cards[0].text}</h1>
+    <div className="text-center">
+      <h1 className="text-5xl font-bold my-6 text-canary-500">{deck.cards[0].text}</h1>
       {
         isShowed ? 
         <div>
-          <h1>{deck.cards[0].answer}</h1>
-          <button onClick={next}>Next</button>
+          <h1 className="text-4xl font-bold my-6 text-canary-300">{deck.cards[0].answer}</h1>
+          <button className={primaryButton} onClick={next}>Next</button>
         </div> :
-        <button onClick={showAnswer}>Show answer</button>
+        <button className={primaryButton} onClick={showAnswer}>Show answer</button>
       }
-      <button onClick={e => setPage({type: "main", decks})}>Back</button>
+      <button className={secondaryButton} onClick={e => setPage({type: "main", decks})}>Back</button>
     </div>
   )
 }
