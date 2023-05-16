@@ -28,6 +28,7 @@ type Selected = {
 type CardType = {
   text: string,
   answer: string,
+  id: string,
 }
 
 type DeckType = {

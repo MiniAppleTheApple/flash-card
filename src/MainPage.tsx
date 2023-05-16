@@ -5,10 +5,18 @@ import CardForm from "./CardForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 
-const defaultCard = {
+const generateCardID = () => Date.now().toString(16) 
+
+const defaultCard: CardType = {
+  id: "",
+  text: "",
+  answer: "",  
+}
+const newCard = (): CardType => ({
   text: "",
   answer: "",
-}
+  id: generateCardID(),
+})
 
 const updateDeck = (deck: DeckType, {action, card}: Selected): DeckType => {
   switch (action.type) {
@@ -34,7 +42,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
   const [decks, setDecks] = useState<DeckType[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
-  const [file, setFile] = useState<string>(null)
+  const [file, setFile] = useState<string>("")
 
   useEffect(() => {
     console.log("Hello")
@@ -53,7 +61,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const deckOnClick = (index: number) => setSelected({
     index,
-    card: defaultCard,
+    card: newCard(),
     action: {
       type: "add",
     }
@@ -110,7 +118,11 @@ const MainPage : React.FC<MainPageProps> = (props) => {
       const reader = new FileReader()
       reader.onload = e => {
         if (typeof e?.target?.result === "string") {
-          setDecks(JSON.parse(e.target.result))
+          const parsed = JSON.parse(e.target.result)
+          setDecks(parsed.map(deck => {
+            const cards = deck.cards.map(card => ({...card, id: card.id ?? generateCardID()}))
+            return {...deck, cards: cards}
+          }))
         }
       } 
       reader.readAsText(fileObject)
@@ -142,7 +154,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
           </div>
         )
       }
-      {file === null ? null : <p className={`${secondaryButton} w-max my-6`}><a href={file} download>Download</a></p>}
+      {file === "" ? "" : <p className={`${secondaryButton} w-max my-6`}><a href={file} download>Download</a></p>}
       <input className={`${primaryButton} w-max`} type="file" onChange={uploadFile} multiple={false} accept=".json,application/json"></input>
     </div>
   )
