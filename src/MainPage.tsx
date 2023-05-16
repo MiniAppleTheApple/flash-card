@@ -124,7 +124,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
           const parsed = JSON.parse(e.target.result)
           setDecks(parsed.map((deck: DeckType, index: number) => {
             const cards = deck.cards.
-              concat(decks[index].cards).
+              concat(decks[index]?.cards ?? []).
               map((card: CardType) => {
                 const id = card.id ?? generateCardID()
                 return [id, {...card, id}]
