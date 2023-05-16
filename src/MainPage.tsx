@@ -5,7 +5,7 @@ import CardForm from "./CardForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 
-const generateCardID = () => Date.now().toString(16) 
+const generateCardID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
 
 const defaultCard: CardType = {
   id: "",
@@ -38,6 +38,10 @@ const displayAction = (action: CardsModification) => {
   }
 }
 
+function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
+  return [...new Map(arr.map(x => [f(x), x])).values()]
+}
+
 const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
   const [decks, setDecks] = useState<DeckType[]>(props.decks)
@@ -45,7 +49,6 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   const [file, setFile] = useState<string>("")
 
   useEffect(() => {
-    console.log("Hello")
     const text = localStorage.getItem("decks")
     if (text !== null) {
       setDecks(JSON.parse(text))
@@ -119,9 +122,17 @@ const MainPage : React.FC<MainPageProps> = (props) => {
       reader.onload = e => {
         if (typeof e?.target?.result === "string") {
           const parsed = JSON.parse(e.target.result)
-          setDecks(parsed.map((deck: DeckType) => {
-            const cards = deck.cards.map((card: CardType) => ({...card, id: card.id ?? generateCardID()}))
-            return {...deck, cards: cards}
+          setDecks(parsed.map((deck: DeckType, index: number) => {
+            const cards = deck.cards.
+              concat(decks[index].cards).
+              map((card: CardType) => {
+                const id = card.id ?? generateCardID()
+                return [id, {...card, id}]
+              })
+
+            const uniqCards = uniqBy(cards, ([key, _value]) => key)
+
+            return {...deck, cards: uniqCards.map(([_key, value]) => value)}
           }))
         }
       } 
