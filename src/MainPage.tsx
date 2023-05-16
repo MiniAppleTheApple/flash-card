@@ -34,7 +34,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
   const [decks, setDecks] = useState<DeckType[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
-  const [file, setFile] = useState<any>(null)
+  const [file, setFile] = useState<string>(null)
 
   useEffect(() => {
     console.log("Hello")
@@ -48,11 +48,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     localStorage.setItem("decks", JSON.stringify(decks))
     const file = new Blob([JSON.stringify(decks)], {type: "application/json"});
     const href = URL.createObjectURL(file);
-    const download = name;
-    setFile({
-      download,
-      href,
-    })
+    setFile(href)
   }, [decks])
 
   const deckOnClick = (index: number) => setSelected({
@@ -146,7 +142,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
           </div>
         )
       }
-      {file === null ? null : <p className={`${secondaryButton} w-max my-6`}><a href={file.href} download={file.download}>Download</a></p>}
+      {file === null ? null : <p className={`${secondaryButton} w-max my-6`}><a href={file} download>Download</a></p>}
       <input className={`${primaryButton} w-max`} type="file" onChange={uploadFile} multiple={false} accept=".json,application/json"></input>
     </div>
   )

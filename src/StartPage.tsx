@@ -2,17 +2,20 @@ import { useState, MouseEvent } from "react"
 import { primaryButton, secondaryButton } from "./utils"
 
 // TODO remove mutable data from this implementation 
-function shuffle<T>(array: T[]) {
+function shuffle<T>(arr: T[]) {
+  const array = [...arr]
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    const temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
   }
-  return array;
+  return array
 }
 
 const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
-  const [deck, setDeck] = useState({...decks[index], cards: shuffle(decks[index].cards)})
-  const [isShowed, setIsShowed] = useState(false)
+  const [deck, setDeck] = useState<DeckType>({...decks[index], cards: shuffle(decks[index].cards)})
+  const [isShowed, setIsShowed] = useState<boolean>(false)
 
   const next = (event: MouseEvent) => {
     if (deck.cards.length > 1) {
