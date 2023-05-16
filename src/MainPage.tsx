@@ -119,8 +119,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
       reader.onload = e => {
         if (typeof e?.target?.result === "string") {
           const parsed = JSON.parse(e.target.result)
-          setDecks(parsed.map(deck => {
-            const cards = deck.cards.map(card => ({...card, id: card.id ?? generateCardID()}))
+          setDecks(parsed.map((deck: DeckType) => {
+            const cards = deck.cards.map((card: CardType) => ({...card, id: card.id ?? generateCardID()}))
             return {...deck, cards: cards}
           }))
         }
