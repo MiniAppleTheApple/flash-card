@@ -123,16 +123,12 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         if (typeof e?.target?.result === "string") {
           const parsed = JSON.parse(e.target.result)
           setDecks(parsed.map((deck: DeckType, index: number) => {
-            const cards = deck.cards.
-              concat(decks[index]?.cards ?? []).
-              map((card: CardType) => {
-                const id = card.id ?? generateCardID()
-                return [id, {...card, id}]
-              })
+            const cards = (decks[index]?.cards ?? []).
+              concat(deck.cards)
 
-            const uniqCards = uniqBy(cards, ([key, _value]) => key)
+            const uniqCards = uniqBy(cards, card => card.id)
 
-            return {...deck, cards: uniqCards.map(([_key, value]) => value)}
+            return {...deck, cards: uniqCards}
           }))
         }
       } 
