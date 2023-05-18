@@ -2,6 +2,7 @@ const buttonStyleTemplate = ({backgroundColor, textColor}: {backgroundColor: [st
   `cursor-pointer
   px-5
   py-3
+  rounded-md
   ${backgroundColor[0]}
   ${textColor[0]}
   ${backgroundColor[1]}
@@ -9,13 +10,13 @@ const buttonStyleTemplate = ({backgroundColor, textColor}: {backgroundColor: [st
   transition-colors`
 
 const primaryButton = buttonStyleTemplate({
-  backgroundColor: ["bg-primary-500", "hover:bg-primary-700"],
-  textColor: ["text-screamin-green-500", "hover:text-screamin-green-700"],
+  backgroundColor: ["bg-glade-green-500", "hover:bg-glade-green-700"],
+  textColor: ["text-timberwolf-500", "hover:text-timberwolf-700"],
 })
 
 const secondaryButton = buttonStyleTemplate({
-  backgroundColor: ["bg-secondary-500", "hover:bg-secondary-700"],
-  textColor: ["text-canary-500", "hover:text-canary-700"], 
+  backgroundColor: ["bg-tom-thumb-500", "hover:bg-tom-thumb-700"],
+  textColor: ["text-timberwolf-500", "hover:text-timberwolf-700"], 
 })
 
 export {buttonStyleTemplate, primaryButton, secondaryButton}
