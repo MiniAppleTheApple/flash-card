@@ -117,13 +117,18 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const uploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.files !== null) {
+      const deckMap = new Map(
+        decks.map(
+          (deck: DeckType) => ([deck.name, deck])
+        )
+      )
       const fileObject = event.target.files[0]
       const reader = new FileReader()
       reader.onload = e => {
         if (typeof e?.target?.result === "string") {
           const parsed = JSON.parse(e.target.result)
-          setDecks(parsed.map((deck: DeckType, index: number) => {
-            const cards = (decks[index]?.cards ?? []).
+          setDecks(parsed.map((deck: DeckType) => {
+            const cards = (deckMap.get(deck.name)?.cards ?? []).
               concat(deck.cards).
               map(card => ({...card, id: card.id === "" || card.id === undefined || card.id === null ? generateCardID() : card.id }))
 
