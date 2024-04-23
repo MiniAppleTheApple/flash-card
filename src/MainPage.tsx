@@ -42,6 +42,25 @@ function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
   return [...new Map(arr.map(x => [f(x), x])).values()]
 }
 
+function bindOnloadEvent(fileObject: File, deckMap: Map<string, DeckType>, setDecks: (x: DeckType[]) => void) {
+  const reader = new FileReader()
+	reader.onload = e => {
+		if (typeof e?.target?.result === "string") {
+			const parsed = JSON.parse(e.target.result)
+			setDecks(parsed.map((deck: DeckType) => {
+				const cards = (deckMap.get(deck.name)?.cards ?? []).
+					concat(deck.cards).
+					map(card => ({...card, id: card.id === "" || card.id === undefined || card.id === null ? generateCardID() : card.id }))
+
+				const uniqCards = uniqBy(cards, card => card.id)
+
+				return {...deck, cards: uniqCards}
+			}))
+		}
+	} 
+	reader.readAsText(fileObject)
+}
+
 const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
   const [decks, setDecks] = useState<DeckType[]>(props.decks)
@@ -123,22 +142,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         )
       )
       const fileObject = event.target.files[0]
-      const reader = new FileReader()
-      reader.onload = e => {
-        if (typeof e?.target?.result === "string") {
-          const parsed = JSON.parse(e.target.result)
-          setDecks(parsed.map((deck: DeckType) => {
-            const cards = (deckMap.get(deck.name)?.cards ?? []).
-              concat(deck.cards).
-              map(card => ({...card, id: card.id === "" || card.id === undefined || card.id === null ? generateCardID() : card.id }))
-
-            const uniqCards = uniqBy(cards, card => card.id)
-
-            return {...deck, cards: uniqCards}
-          }))
-        }
-      } 
-      reader.readAsText(fileObject)
+      bindOnloadEvent(fileObject, deckMap, setDecks)
     }
   }
 
