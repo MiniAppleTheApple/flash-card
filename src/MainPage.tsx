@@ -5,7 +5,7 @@ import CardForm from "./CardForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 
-const generateCardID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
+const generateID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
 
 const defaultCard: CardType = {
   id: "",
@@ -15,22 +15,23 @@ const defaultCard: CardType = {
 const newCard = (): CardType => ({
   text: "",
   answer: "",
-  id: generateCardID(),
+  id: generateID(),
 })
 
 const updateDeck = (deck: DeckType, {action, card}: Selected): DeckType => {
+  const { cards } = deck;
   switch (action.type) {
   case "add":
-    return {...deck, cards: [...deck.cards, card]}
+    return {...deck, cards: [...cards, card]}
   case "edit":
-    return {...deck, cards: deck.cards.map((x, index) => index === action.index ? card : x)}
+    return {...deck, cards: updateByIndex(cards, action.index, (_e) => card)}
   default:
     return deck
   }
 }
 
-const displayAction = (action: CardsModification) => {
-  switch(action.type) {
+const displayAction = ({ type }: CardsModification) => {
+  switch(type) {
   case "add":
     return "Add Card"
   case "edit":
@@ -42,23 +43,42 @@ function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
   return [...new Map(arr.map(x => [f(x), x])).values()]
 }
 
-function bindOnloadEvent(fileObject: File, deckMap: Map<string, DeckType>, setDecks: (x: DeckType[]) => void) {
+function mergeDeckCards(x: DeckType, y: DeckType) {
+  const cards = x.cards.concat(y.cards)
+
+  return uniqBy(cards, card => card.id)
+}
+
+function registerLoadedCard(card: CardType) {
+  return {...card, id: card.id === "" || card.id === undefined || card.id === null ? generateID() : card.id }
+}
+
+function bindOnloadEvent(fileObject: File, deckByName: Map<string, DeckType>, setDecks: (x: DeckType[]) => void) {
   const reader = new FileReader()
 	reader.onload = e => {
 		if (typeof e?.target?.result === "string") {
 			const parsed = JSON.parse(e.target.result)
-			setDecks(parsed.map((deck: DeckType) => {
-				const cards = (deckMap.get(deck.name)?.cards ?? []).
-					concat(deck.cards).
-					map(card => ({...card, id: card.id === "" || card.id === undefined || card.id === null ? generateCardID() : card.id }))
+			setDecks(parsed.map((loaded: DeckType) => {
+        
+				const cards = (deckByName.get(loaded.name)?.cards ?? []).
+					concat(loaded.cards).
+					map(card => registerLoadedCard(card))
 
 				const uniqCards = uniqBy(cards, card => card.id)
 
-				return {...deck, cards: uniqCards}
+				return {...loaded, cards: uniqCards}
 			}))
 		}
 	} 
 	reader.readAsText(fileObject)
+}
+
+function isSelectedEmpty(selected: Selected): boolean {
+  return [selected.card.text, selected.card.answer].every(x => x !== "")
+}
+
+function updateByIndex<T>(arr: T[], index: number, f: (element: T) => T): T[] {
+  return arr.map((element, i) => i === index ? f(element) : element)
 }
 
 const MainPage : React.FC<MainPageProps> = (props) => {
@@ -91,8 +111,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const onSubmit = (event: Event) => {
     event.preventDefault()
-    if (selected !== null && [selected?.card?.text, selected?.card?.answer].every(x => x !== "")) {
-      setDecks(decks => decks.map((deck, index) => index === selected.index ? updateDeck(deck, selected) : deck))
+    if (selected !== null && isSelectedEmpty(selected)) {
+      setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected({
         ...selected,
         card: defaultCard,
@@ -124,29 +144,19 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const remove = (index: number) => {
     if (selected !== null) {
-      setDecks(
-        decks => decks.map(
-          (deck, deckIndex) => deckIndex === selected.index ? 
-          {...deck, cards: deck.cards.filter((card, cardIndex) => index !== cardIndex)} :
-          deck
-        )
-      )
+      setDecks(decks => updateByIndex(decks, selected.index, deck => ({...deck, cards: deck.cards.filter((_card, cardIndex) => index !== cardIndex)})))
     }
   }
 
   const uploadFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event?.target?.files !== null) {
-      const deckMap = new Map(
-        decks.map(
-          (deck: DeckType) => ([deck.name, deck])
-        )
-      )
+      const deckByName = new Map(decks.map(deck => ([deck.name, deck])))
       const fileObject = event.target.files[0]
-      bindOnloadEvent(fileObject, deckMap, setDecks)
+      bindOnloadEvent(fileObject, deckByName, setDecks)
     }
   }
 
-  const deleteDeck = (): void => {
+  const removeDeck = (): void => {
     setDecks(decks => decks.filter((x, index) => (selected?.index ?? -1) !== index))
   }
 
@@ -158,7 +168,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         null : 
         (
           <div className="my-6">
-            <button className={secondaryButton} onClick={e => deleteDeck()}>Delete</button>
+            <button className={secondaryButton} onClick={e => removeDeck()}>Delete</button>
             <button className={primaryButton} onClick={e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
             <div>
               <h1 className="text-5xl font-bold my-6">Cards</h1>
