@@ -43,16 +43,6 @@ function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
   return [...new Map(arr.map(x => [f(x), x])).values()]
 }
 
-function mergeDeckCards(x: DeckType, y: DeckType) {
-  const cards = x.cards.concat(y.cards)
-
-  return uniqBy(cards, card => card.id)
-}
-
-function registerLoadedCard(card: CardType) {
-  return {...card, id: card.id === "" || card.id === undefined || card.id === null ? generateID() : card.id }
-}
-
 function bindOnloadEvent(fileObject: File, deckByName: Map<string, DeckType>, setDecks: (x: DeckType[]) => void) {
   const reader = new FileReader()
 	reader.onload = e => {
@@ -61,8 +51,7 @@ function bindOnloadEvent(fileObject: File, deckByName: Map<string, DeckType>, se
 			setDecks(parsed.map((loaded: DeckType) => {
         
 				const cards = (deckByName.get(loaded.name)?.cards ?? []).
-					concat(loaded.cards).
-					map(card => registerLoadedCard(card))
+					concat(loaded.cards)
 
 				const uniqCards = uniqBy(cards, card => card.id)
 
