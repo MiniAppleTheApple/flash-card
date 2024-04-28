@@ -18,6 +18,11 @@ const newCard = (): CardType => ({
   id: generateID(),
 })
 
+const newDeck = (): DeckType => ({
+  name: "New deck",
+  cards: [],
+})
+
 const updateDeck = (deck: DeckType, {action, card}: Selected): DeckType => {
   const { cards } = deck;
   switch (action.type) {
@@ -149,16 +154,19 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     setDecks(decks => decks.filter((x, index) => (selected?.index ?? -1) !== index))
   }
 
+  const addNewDeck = (): void => {
+    setDecks(decks => [newDeck(), ...decks])
+  }
+
   return (
     <div className="p-10">
       <h1 className="text-6xl font-bold my-6">Decks</h1>
       <Decks deckOnClick={deckOnClick} decks={decks}/>
-      {selected === null || decks.length < 1  ? 
-        null : 
+      {selected !== null && decks.length > 0 ?
         (
           <div className="my-6">
-            <button className={secondaryButton} onClick={e => removeDeck()}>Delete</button>
-            <button className={primaryButton} onClick={e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
+            <button className={secondaryButton} onClick={_e => removeDeck()}>Delete</button>
+            <button className={primaryButton} onClick={_e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
             <div>
               <h1 className="text-5xl font-bold my-6">Cards</h1>
               <Cards cards={decks[selected.index].cards} remove={remove} edit={edit}/>
@@ -168,9 +176,11 @@ const MainPage : React.FC<MainPageProps> = (props) => {
               <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
-        )
-      }
-      {file === "" ? "" : <p className={`${secondaryButton} w-max my-6`}><a href={file} download>Download</a></p>}
+        ) : <p>No selected deck</p>}
+      <section className="flex w-max my-6">
+        <button className={`${primaryButton} flex-1`} onClick={_e => addNewDeck()}>New</button>
+        {file === "" ? "" : <p className={`${secondaryButton} flex-1`}><a href={file} download>Download</a></p>}
+      </section>
       <input className={`${primaryButton} w-max`} type="file" onChange={uploadFile} multiple={false} accept=".json,application/json"></input>
     </div>
   )
