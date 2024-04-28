@@ -30,9 +30,8 @@ const updateDeck = (deck: Deck, {action, card}: Selected): Deck => {
     return {...deck, cards: [...cards, card]}
   case "edit":
     return {...deck, cards: updateByIndex(cards, action.index, (_e) => card)}
-  default:
-    return deck
   }
+  throw new Error("Unknown type of action") 
 }
 
 const displayAction = ({ type }: CardsModification) => {
