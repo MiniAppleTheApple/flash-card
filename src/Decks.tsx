@@ -1,6 +1,6 @@
 import { primaryButton } from "./utils.js"
 
-const Decks: React.FC<{deckOnClick: (index: number) => void, decks: DeckType[]}> = ({deckOnClick, decks}) => (
+const Decks: React.FC<{deckOnClick: (index: number) => void, decks: Deck[]}> = ({deckOnClick, decks}) => (
   <ul>
     {decks.map(
       (x, index) => 

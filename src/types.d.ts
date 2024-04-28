@@ -1,15 +1,15 @@
 type Page = {
 	type: "start",
-	decks: DeckType[],
+	decks: Deck[],
 	index: number, 
 } | {
 	type: "main",
-	decks: DeckType[],
+	decks: Deck[],
 }
 
 type AddCard = {
 	type: "add",
-	card: CardType,
+	card: Card,
 }
 
 type EditCard = {
@@ -21,30 +21,30 @@ type CardsModification = AddCard | EditCard
 
 type Selected = {
 	index: number,
-	card: CardType,
+	card: Card,
 	action: CardModification, 
 }
 
-type CardType = {
+type Card = {
   text: string,
   answer: string,
   id: string,
 }
 
-type DeckType = {
+type Deck = {
   name: string,
   cards: Card[],
 }
 
 type MainPageProps = {
   setPage: Dispatch<SetStateAction<"main" | "start">>,
-  decks: DeckType[],
+  decks: Deck[],
 }
 
 type StartPageProps = {
   setPage: Dispatch<SetStateAction<"main" | "start">>,
   index: number,
-  decks: DeckType[],
+  decks: Deck[],
 }
 
 type CardsProps = {

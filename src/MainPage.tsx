@@ -7,23 +7,23 @@ import { secondaryButton, primaryButton } from "./utils"
 
 const generateID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
 
-const defaultCard: CardType = {
+const defaultCard: Card = {
   id: "",
   text: "",
   answer: "",  
 }
-const newCard = (): CardType => ({
+const newCard = (): Card => ({
   text: "",
   answer: "",
   id: generateID(),
 })
 
-const newDeck = (): DeckType => ({
+const newDeck = (): Deck => ({
   name: "New deck",
   cards: [],
 })
 
-const updateDeck = (deck: DeckType, {action, card}: Selected): DeckType => {
+const updateDeck = (deck: Deck, {action, card}: Selected): Deck => {
   const { cards } = deck;
   switch (action.type) {
   case "add":
@@ -48,12 +48,12 @@ function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
   return [...new Map(arr.map(x => [f(x), x])).values()]
 }
 
-function bindOnloadEvent(fileObject: File, deckByName: Map<string, DeckType>, setDecks: (x: DeckType[]) => void) {
+function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDecks: (x: Deck[]) => void) {
   const reader = new FileReader()
 	reader.onload = e => {
 		if (typeof e?.target?.result === "string") {
 			const parsed = JSON.parse(e.target.result)
-			setDecks(parsed.map((loaded: DeckType) => {
+			setDecks(parsed.map((loaded: Deck) => {
         
 				const cards = (deckByName.get(loaded.name)?.cards ?? []).
 					concat(loaded.cards)
@@ -77,7 +77,7 @@ function updateByIndex<T>(arr: T[], index: number, f: (element: T) => T): T[] {
 
 const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
-  const [decks, setDecks] = useState<DeckType[]>(props.decks)
+  const [decks, setDecks] = useState<Deck[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
   const [file, setFile] = useState<string>("")
 
@@ -176,7 +176,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
               <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
-        ) : <p>No selected deck</p>}
+        ) :
+        <p>No selected deck</p>}
       <section className="flex w-max my-6">
         <button className={`${primaryButton} flex-1`} onClick={_e => addNewDeck()}>New</button>
         {file === "" ? "" : <p className={`${secondaryButton} flex-1`}><a href={file} download>Download</a></p>}

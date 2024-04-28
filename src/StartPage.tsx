@@ -14,7 +14,7 @@ function shuffle<T>(arr: T[]) {
 }
 
 const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
-  const [deck, setDeck] = useState<DeckType>({...decks[index], cards: shuffle(decks[index].cards)})
+  const [deck, setDeck] = useState<Deck>({...decks[index], cards: shuffle(decks[index].cards)})
   const [isShowed, setIsShowed] = useState<boolean>(false)
 
   const next = (event: MouseEvent) => {
