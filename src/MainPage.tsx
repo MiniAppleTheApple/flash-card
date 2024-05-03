@@ -115,15 +115,9 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const onSubmit: SubmitHandler<CardFormInputs> = (data) => {
     if (selected !== null && isCardFormEmpty(data)) {
-      const { text, answer } = data
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected({
         ...selected,
-        card: {
-          text,
-          answer,
-          id: generateID(),
-        },
         action: {
           type: "add"
         }
