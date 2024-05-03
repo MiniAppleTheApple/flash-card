@@ -1,4 +1,7 @@
 import { useState, useEffect, ChangeEvent } from "react"
+
+import { useForm, SubmitHandler } from "react-hook-form"
+
 import Decks from "./Decks"
 import Cards from "./Cards"
 import CardForm from "./CardForm"
@@ -66,15 +69,26 @@ function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDec
 	reader.readAsText(fileObject)
 }
 
-function isSelectedEmpty(selected: Selected): boolean {
-  return [selected.card.text, selected.card.answer].every(x => x !== "")
+function isCardFormEmpty({text, answer}: CardFormInputs): boolean {
+  return text !== "" && answer !== ""
 }
 
 function updateByIndex<T>(arr: T[], index: number, f: (element: T) => T): T[] {
   return arr.map((element, i) => i === index ? f(element) : element)
 }
 
+interface CardFormInputs {
+  text: string
+  answer: string
+}
+
 const MainPage : React.FC<MainPageProps> = (props) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<CardFormInputs>()
   const {setPage} = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
@@ -102,13 +116,17 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     }
   })
 
-  const onSubmit = (event: Event) => {
-    event.preventDefault()
-    if (selected !== null && isSelectedEmpty(selected)) {
+  const onSubmit: SubmitHandler<CardFormInputs> = (data) => {
+    if (selected !== null && isCardFormEmpty(data)) {
+      const { text, answer } = data
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected({
         ...selected,
-        card: defaultCard,
+        card: {
+          text,
+          answer,
+          id: generateID(),
+        },
         action: {
           type: "add"
         }
