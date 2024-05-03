@@ -1,3 +1,9 @@
-import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { atom } from "recoil"
+
+const decksState = atom({
+  key: "decks",
+  default: [] as Deck[],
+})
+
+export { decksState }
 

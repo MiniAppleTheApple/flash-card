@@ -52,3 +52,8 @@ type CardsProps = {
   remove: Dispatch<SetStateAction<number>>,
   edit: Dispatch<SetStateAction<number>>,
 }
+
+interface CardFormInputs {
+  text: string
+  answer: string
+}
