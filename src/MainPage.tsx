@@ -84,10 +84,7 @@ interface CardFormInputs {
 
 const MainPage : React.FC<MainPageProps> = (props) => {
   const {
-    register,
     handleSubmit,
-    watch,
-    formState: { errors },
   } = useForm<CardFormInputs>()
   const {setPage} = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
@@ -190,7 +187,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
             </div>
             <div>
               <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
-              <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+              <CardForm card={selected.card} onSubmit={handleSubmit(onSubmit)} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
         ) :
