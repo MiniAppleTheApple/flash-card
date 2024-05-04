@@ -9,7 +9,6 @@ type Page = {
 
 type AddCard = {
 	type: "add",
-	card: Card,
 }
 
 type EditCard = {
@@ -49,6 +48,7 @@ type StartPageProps = {
 
 type CardsProps = {
   cards: Card[],
+
   remove: Dispatch<SetStateAction<number>>,
   edit: Dispatch<SetStateAction<number>>,
 }
