@@ -117,11 +117,13 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     if (selected !== null && isCardFormEmpty(data)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected({
+      setSelected(selected => {
         ...selected,
+        card: newCard(),
         action: {
           type: "add"
         }
-      })
+      }))
     }
   }
 
