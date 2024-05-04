@@ -9,20 +9,20 @@ type Page = {
 
 type AddCard = {
 	type: "add",
+  card: Card,
 }
 
 type EditCard = {
 	type: "edit",
 	index: number,
+  card: Card,
 }
 
 type CardsModification = AddCard | EditCard
 
 type Selected = {
-  isCardForm: boolean,
 	index: number,
-	card: Card,
-	action: CardModification, 
+	action: CardsModification, 
 }
 
 type Card = {

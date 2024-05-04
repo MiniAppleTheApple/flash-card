@@ -77,20 +77,7 @@ function updateByIndex<T>(arr: T[], index: number, f: (element: T) => T): T[] {
   return arr.map((element, i) => i === index ? f(element) : element)
 }
 
-interface CardFormInputs {
-  text: string
-  answer: string
-}
-
-interface DeckFormInputs {
-  name: string
-}
-
 const MainPage : React.FC<MainPageProps> = (props) => {
-  const form = {
-    card: useForm<CardFormInputs>(),
-    deck: useForm<DeckFormInputs>(),
-  }
   const {setPage} = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
@@ -112,7 +99,6 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const deckOnClick = (index: number) => setSelected({
     index,
-    isCardForm: true,
     card: newCard(),
     action: {
       type: "add",
@@ -126,19 +112,11 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         ...selected,
         card: newCard(),
         action: {
-          type: "add"
+          type: "add",
         }
       }))
     }
   }
-
-  const onTextChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
-  )
-
-  const onAnswerChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
-  )
 
   const edit = (index: number) => {
     setSelected(selected => (selected === null ? null : {
@@ -188,7 +166,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
             </div>
             <div>
               <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
-              <CardForm register={form.card.register} card={selected.card} onSubmit={form.card.handleSubmit(onSubmit)} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+              <CardForm onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
         ) :
