@@ -82,10 +82,15 @@ interface CardFormInputs {
   answer: string
 }
 
+interface DeckFormInputs {
+  name: string
+}
+
 const MainPage : React.FC<MainPageProps> = (props) => {
-  const {
-    handleSubmit,
-  } = useForm<CardFormInputs>()
+  const form = {
+    card: useForm<CardFormInputs>(),
+    deck: useForm<DeckFormInputs>(),
+  }
   const {setPage} = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
@@ -107,6 +112,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const deckOnClick = (index: number) => setSelected({
     index,
+    isCardForm: true,
     card: newCard(),
     action: {
       type: "add",
@@ -116,9 +122,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   const onSubmit: SubmitHandler<CardFormInputs> = (data) => {
     if (selected !== null && isCardFormEmpty(data)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
-      setSelected({
-      setSelected(selected => {
-      setSelected(selected => ({
+      setSelected(selected => (selected === null ? selected : {
         ...selected,
         card: newCard(),
         action: {
@@ -184,7 +188,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
             </div>
             <div>
               <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
-              <CardForm card={selected.card} onSubmit={handleSubmit(onSubmit)} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+              <CardForm register={form.card.register} card={selected.card} onSubmit={form.card.handleSubmit(onSubmit)} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
         ) :

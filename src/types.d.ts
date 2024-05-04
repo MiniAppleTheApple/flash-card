@@ -19,6 +19,7 @@ type EditCard = {
 type CardsModification = AddCard | EditCard
 
 type Selected = {
+  isCardForm: boolean,
 	index: number,
 	card: Card,
 	action: CardModification, 
