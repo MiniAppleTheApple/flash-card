@@ -118,6 +118,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected({
       setSelected(selected => {
+      setSelected(selected => ({
         ...selected,
         card: newCard(),
         action: {
