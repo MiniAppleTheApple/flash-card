@@ -4,7 +4,7 @@ const Decks: React.FC<{deckOnClick: (index: number) => void, decks: Deck[]}> = (
   <ul>
     {decks.map(
       (x, index) => 
-        <div className={primaryButton}>
+        <div key={index} className={primaryButton}>
           <li onClick={_ => deckOnClick(index)} key={index}>{x.name}</li>
         </div>)}
   </ul>
