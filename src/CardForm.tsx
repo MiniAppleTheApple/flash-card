@@ -1,6 +1,6 @@
 import { secondaryButton } from "./utils"
 
-const CardForm: React.FC<any> = ({ onSubmit, text, answer }) => {
+const CardForm: React.FC<any> = ({ onSubmit, textOnChange, answerOnChange }) => {
   return (
     <form className="flex flex-col" onSubmit={onSubmit}>
       <p>Text</p>

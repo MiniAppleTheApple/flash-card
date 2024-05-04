@@ -9,18 +9,17 @@ type Page = {
 
 type AddCard = {
 	type: "add",
-  card: Card,
 }
 
 type EditCard = {
 	type: "edit",
 	index: number,
-  card: Card,
 }
 
 type CardsModification = AddCard | EditCard
 
 type Selected = {
+  card: Card,
 	index: number,
 	action: CardsModification, 
 }

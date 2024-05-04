@@ -1,7 +1,5 @@
 import { useState, useEffect, ChangeEvent } from "react"
 
-import { useForm, SubmitHandler } from "react-hook-form"
-
 import Decks from "./Decks"
 import Cards from "./Cards"
 import CardForm from "./CardForm"
@@ -105,8 +103,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     }
   })
 
-  const onSubmit: SubmitHandler<CardFormInputs> = (data) => {
-    if (selected !== null && isCardFormEmpty(data)) {
+  const onSubmit = (_event: ChangeEvent) => {
+    if (selected !== null && isCardFormEmpty(selected.card)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       setSelected(selected => (selected === null ? selected : {
         ...selected,
@@ -117,6 +115,14 @@ const MainPage : React.FC<MainPageProps> = (props) => {
       }))
     }
   }
+
+  const onTextChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
+    selected => (selected === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
+  )
+
+  const onAnswerChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
+    selected => (selected === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
+  )
 
   const edit = (index: number) => {
     setSelected(selected => (selected === null ? null : {
