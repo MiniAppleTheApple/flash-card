@@ -1,12 +1,12 @@
 import { primaryButton, secondaryButton } from "./utils"
 
-const Cards: React.FC<CardsProps> = ({remove, edit, cards}) => {
+const Cards: React.FC<CardsProps> = ({remove, edit, cards, selected}) => {
   if (cards.length > 0) {
     return (
       <ul>
         {cards.map((x, index) => <li key={index}>
           <div className="text-xl flex justify-between">
-            <span className="text-canary-500 mx-4 my-auto">{x.text} - {x.answer}</span>
+            <span className={`mx-4 my-auto ${selected.action.type === "edit" && selected.action.index === index ? "text-timberwolf-50 font-bold" : ""}`}>{x.text} - {x.answer}</span>
             <div>
               <button className={primaryButton} onClick={e => edit(index)}>Edit</button>
               <button className={secondaryButton} onClick={e => remove(index)}>Delete</button>

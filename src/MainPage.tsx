@@ -140,7 +140,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
             <button className={primaryButton} onClick={_e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
             <div>
               <h1 className="text-5xl font-bold my-6">Cards</h1>
-              <Cards cards={decks[selected.index].cards} remove={remove} edit={edit}/>
+              <Cards selected={selected} cards={decks[selected.index].cards} remove={remove} edit={edit}/>
             </div>
             <div>
               <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>

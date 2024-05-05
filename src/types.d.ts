@@ -48,7 +48,7 @@ type StartPageProps = {
 
 type CardsProps = {
   cards: Card[],
-
+  selected: Selected,
   remove: Dispatch<SetStateAction<number>>,
   edit: Dispatch<SetStateAction<number>>,
 }

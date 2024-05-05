@@ -7,7 +7,8 @@ const buttonStyleTemplate = ({backgroundColor, textColor}: {backgroundColor: [st
   ${textColor[0]}
   ${backgroundColor[1]}
   ${textColor[1]}
-  transition-colors`
+  transition-colors
+  font-bold`
 
 const primaryButton = buttonStyleTemplate({
   backgroundColor: ["bg-glade-green-500", "hover:bg-glade-green-700"],
