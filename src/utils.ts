@@ -19,4 +19,6 @@ const secondaryButton = buttonStyleTemplate({
   textColor: ["text-timberwolf-500", "hover:text-timberwolf-700"], 
 })
 
-export {buttonStyleTemplate, primaryButton, secondaryButton}
+const generateID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
+
+export { buttonStyleTemplate, primaryButton, secondaryButton, generateID }

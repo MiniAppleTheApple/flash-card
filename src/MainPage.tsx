@@ -5,35 +5,14 @@ import Cards from "./Cards"
 import CardForm from "./CardForm"
 
 import { secondaryButton, primaryButton } from "./utils"
-
-const generateID = () => (Date.now() * Math.floor(Math.random() * 200)).toString(16)
-
-const defaultCard: Card = {
-  id: "",
-  text: "",
-  answer: "",  
-}
-const newCard = (): Card => ({
-  text: "",
-  answer: "",
-  id: generateID(),
-})
+import { uniqBy, updateByIndex } from "./array"
+import { updateDeck } from "./deck"
+import { newCard, isCardEmpty } from "./card"
 
 const newDeck = (): Deck => ({
   name: "New deck",
   cards: [],
 })
-
-const updateDeck = (deck: Deck, {action, card}: Selected): Deck => {
-  const { cards } = deck;
-  switch (action.type) {
-  case "add":
-    return {...deck, cards: [...cards, card]}
-  case "edit":
-    return {...deck, cards: updateByIndex(cards, action.index, (_e) => card)}
-  }
-  throw new Error("Unknown type of action") 
-}
 
 const displayAction = ({ type }: CardsModification) => {
   switch(type) {
@@ -42,10 +21,6 @@ const displayAction = ({ type }: CardsModification) => {
   case "edit":
     return "Edit Card"
   }
-}
-
-function uniqBy<T, K>(arr: T[], f: (x: T) => K): T[] {
-  return [...new Map(arr.map(x => [f(x), x])).values()]
 }
 
 function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDecks: (x: Deck[]) => void) {
@@ -67,14 +42,6 @@ function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDec
 	reader.readAsText(fileObject)
 }
 
-function isCardFormEmpty({text, answer}: CardFormInputs): boolean {
-  return text !== "" && answer !== ""
-}
-
-function updateByIndex<T>(arr: T[], index: number, f: (element: T) => T): T[] {
-  return arr.map((element, i) => i === index ? f(element) : element)
-}
-
 const MainPage : React.FC<MainPageProps> = (props) => {
   const {setPage} = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
@@ -89,12 +56,15 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }, []);
 
   useEffect(() => {
+    // sotre in localStorage 
     localStorage.setItem("decks", JSON.stringify(decks))
+    // create a url of it and store in file
     const file = new Blob([JSON.stringify(decks)], {type: "application/json"});
     const href = URL.createObjectURL(file);
     setFile(href)
   }, [decks])
 
+  // reset the form, and set index to another deck
   const deckOnClick = (index: number) => setSelected({
     index,
     card: newCard(),
@@ -103,9 +73,11 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     }
   })
 
-  const onSubmit = (_event: ChangeEvent) => {
-    if (selected !== null && isCardFormEmpty(selected.card)) {
+  const onSubmit = (event: ChangeEvent<HTMLElement>) => {
+    event.preventDefault() 
+    if (selected !== null && !isCardEmpty(selected.card)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
+      // reset the form, but remain the others data
       setSelected(selected => (selected === null ? selected : {
         ...selected,
         card: newCard(),
@@ -172,7 +144,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
             </div>
             <div>
               <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
-              <CardForm onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+              <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
             </div>
           </div>
         ) :
