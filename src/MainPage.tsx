@@ -121,8 +121,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     }
   }
 
-  const removeDeck = (): void => {
-    setDecks(decks => decks.filter((x, index) => (selected?.index ?? -1) !== index))
+  const removeDeck = (deckIndex: number): void => {
+    setDecks(decks => decks.filter((_x, index) => (deckIndex ?? -1) !== index))
   }
 
   const addNewDeck = (): void => {
@@ -132,11 +132,10 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   return (
     <div className="p-10">
       <h1 className="text-6xl font-bold my-6">Decks</h1>
-      <Decks deckOnClick={deckOnClick} decks={decks}/>
+      <Decks removeDeck={removeDeck} deckOnClick={deckOnClick} decks={decks}/>
       {selected !== null && decks.length > 0 ?
         (
           <div className="my-6">
-            <button className={secondaryButton} onClick={_e => removeDeck()}>Delete</button>
             <button className={primaryButton} onClick={_e => setPage({type: "start", index: selected.index, decks: decks})}>Start</button>
             <div>
               <h1 className="text-5xl font-bold my-6">Cards</h1>
