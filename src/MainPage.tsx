@@ -117,7 +117,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }
 
   const removeDeck = (deckIndex: number): void => {
-    setSelected(selected => null)
+    setSelected(_selected => null)
     setDecks(decks => decks.filter((_x, index) => (deckIndex ?? -1) !== index))
   }
 
