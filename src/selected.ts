@@ -10,14 +10,14 @@ function switchDeck(selected: Selected, deckIndex: number): Selected {
   }
 }
 
-function resetForm(selected: Selected | null): Selected | null {
-  return (selected === null ? selected : {
+function resetForm(selected: Selected): Selected {
+  return {
     ...selected,
     card: newCard(),
     action: {
       type: "add",
     }
-  })
+  }
 }
 
 export { switchDeck, resetForm }

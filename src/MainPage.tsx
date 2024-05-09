@@ -79,7 +79,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     if (selected !== null && !isCardEmpty(selected.card)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       // reset the form, but remain the others data
-      setSelected(selected => resetForm(selected))
+      setSelected(selected => (selected === null ? selected : resetForm(selected)))
     }
   }
 
