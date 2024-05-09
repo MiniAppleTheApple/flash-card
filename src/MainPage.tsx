@@ -8,7 +8,7 @@ import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
 import { updateDeck } from "./deck"
 import { newCard, isCardEmpty } from "./card"
-import { resetForm } from "./selected"
+import { switchDeck, resetForm } from "./selected"
 
 const newDeck = (): Deck => ({
   name: "New deck",
@@ -66,19 +66,12 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }, [decks])
 
   // reset the form, and set index to another deck
-  const deckOnClick = (index: number) => setSelected({
-    index,
-    card: newCard(),
-    action: {
-      type: "add",
-    }
-  })
+  const deckOnClick = (index: number) => setSelected(switchDeck(index))
 
   const onSubmit = (event: ChangeEvent<HTMLElement>) => {
     event.preventDefault() 
     if (selected !== null && !isCardEmpty(selected.card)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
-      // reset the form, but remain the others data
       setSelected(selected => (selected === null ? selected : resetForm(selected)))
     }
   }

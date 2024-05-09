@@ -1,8 +1,8 @@
 import { newCard } from "./card"
 
-function switchDeck(selected: Selected, deckIndex: number): Selected {
+function switchDeck(index: number): Selected {
   return {
-    index: deckIndex,
+    index,
     card: newCard(),
     action: {
       type: "add",
