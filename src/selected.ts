@@ -10,7 +10,7 @@ function switchDeck(selected: Selected, deckIndex: number): Selected {
   }
 }
 
-function resetForm(selected: Selected): Selected {
+function resetForm(selected: Selected | null): Selected | null {
   return (selected === null ? selected : {
     ...selected,
     card: newCard(),
