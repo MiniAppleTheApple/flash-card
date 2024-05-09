@@ -8,6 +8,7 @@ import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
 import { updateDeck } from "./deck"
 import { newCard, isCardEmpty } from "./card"
+import { resetForm } from "./selected"
 
 const newDeck = (): Deck => ({
   name: "New deck",
@@ -43,7 +44,7 @@ function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDec
 }
 
 const MainPage : React.FC<MainPageProps> = (props) => {
-  const {setPage} = props
+  const { setPage } = props
   const [decks, setDecks] = useState<Deck[]>(props.decks)
   const [selected, setSelected] = useState<Selected | null>(null)
   const [file, setFile] = useState<string>("")
@@ -78,13 +79,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     if (selected !== null && !isCardEmpty(selected.card)) {
       setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
       // reset the form, but remain the others data
-      setSelected(selected => (selected === null ? selected : {
-        ...selected,
-        card: newCard(),
-        action: {
-          type: "add",
-        }
-      }))
+      setSelected(selected => resetForm(selected))
     }
   }
 
@@ -122,6 +117,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }
 
   const removeDeck = (deckIndex: number): void => {
+    setSelected(selected => null)
     setDecks(decks => decks.filter((_x, index) => (deckIndex ?? -1) !== index))
   }
 
