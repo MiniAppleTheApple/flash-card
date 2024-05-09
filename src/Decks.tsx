@@ -4,9 +4,9 @@ const Decks: React.FC<{removeDeck: (deckIndex: number) => void, deckOnClick: (in
   <ul>
     {decks.map(
       (x, index) => 
-        <li key={index} className={`${primaryButton} flex`}>
-          <p className="flex-1 text-2xl" onClick={_ => deckOnClick(index)} key={index}>{x.name}</p>
-          <button className={`${secondaryButton} ml-auto`}>Edit</button>
+        <li key={index} onClick={_ => deckOnClick(index)} className="rounded-lg bg-lunar-green-700 p-4 flex hover:bg-lunar-green-900 transition-colors my-2 cursor-pointer hover:text-lunar-green-700">
+          <p className="flex-1 text-2xl font-bold">{x.name}</p>
+          <button className={`${primaryButton} ml-auto`}>Edit</button>
           <button className={secondaryButton} onClick={(_e) => removeDeck(index)}>Delete</button>
         </li>)}
   </ul>
