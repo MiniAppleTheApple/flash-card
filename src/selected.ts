@@ -1,6 +1,6 @@
 import { cardSelectedSwitchDeck, cardSelectedResetForm } from "./card_selected";
 
-function switchDeck(selected: Selected | null, index: number) {
+function switchDeck(index: number) {
   return cardSelectedSwitchDeck(index)
 }
 
