@@ -1,13 +1,7 @@
 import { cardSelectedSwitchDeck, cardSelectedResetForm } from "./card_selected";
 
 function switchDeck(selected: Selected | null, index: number) {
-  if (selected === null) return cardSelectedSwitchDeck(index)
-  switch (selected.type) {
-  case "card":
-    return cardSelectedSwitchDeck(index)
-  case "edit_deck":
-    return selected 
-  }
+  return cardSelectedSwitchDeck(index)
 }
 
 function editDeckSelectedResetForm(selected: EditDeckSelected): EditDeckSelected {

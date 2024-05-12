@@ -69,10 +69,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }, [decks])
 
   // reset the form, and set index to another deck
-  const deckOnClick = (index: number) => setSelected(selected => {
-    if (selected === null) return cardSelectedSwitchDeck(index)
-    return switchDeck(selected, index)
-  })
+  const deckOnClick = (index: number) => setSelected(selected => switchDeck(selected, index))
   const deckOnEdit = (index: number) => setSelected(_selected => newEditDeckSelected(index))
 
   const onSubmit = (event: ChangeEvent<HTMLElement>) => {
