@@ -12,12 +12,14 @@ import { newCard, isCardEmpty } from "./card"
 import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
 import { cardSelectedSwitchDeck } from "./card_selected"
 
-const newDeck = (): Deck => ({
-  name: "New deck",
-  cards: [],
-})
+function newDeck(): Deck {
+  return {
+    name: "New deck",
+    cards: [],
+  }
+}
 
-const displayAction = ({ type }: CardModification) => {
+function displayAction({ type }: CardModification): string {
   switch(type) {
   case "add":
     return "Add Card"
@@ -89,6 +91,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
         setSelected(selected => (selected === null ? selected : resetForm(selected)))
       }
+      return
     }
   }
 
