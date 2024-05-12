@@ -16,14 +16,28 @@ type EditCard = {
 	index: number,
 }
 
-type CardsModification = AddCard | EditCard
+type CardModification = AddCard | EditCard
 
-type Selected = {
+type CardSelected = {
+  type: "card",
   card: Card,
 	index: number,
-	action: CardsModification, 
+	action: CardModification, 
 }
 
+type EditDeck = {
+  type: "edit",
+  name: string,
+}
+
+type EditDeckSelected = {
+  type: "edit_deck"
+  index: number,
+  name: string,
+}
+
+type Selected = CardSelected | EditDeckSelected
+t
 type Card = {
   text: string,
   answer: string,

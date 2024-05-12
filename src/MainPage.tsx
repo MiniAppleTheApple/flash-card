@@ -3,19 +3,21 @@ import { useState, useEffect, ChangeEvent } from "react"
 import Decks from "./Decks"
 import Cards from "./Cards"
 import CardForm from "./CardForm"
+import DeckForm from "./DeckForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
 import { updateDeck } from "./deck"
 import { newCard, isCardEmpty } from "./card"
-import { switchDeck, resetForm } from "./selected"
+import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
+import { cardSelectedSwitchDeck } from "./card_selected"
 
 const newDeck = (): Deck => ({
   name: "New deck",
   cards: [],
 })
 
-const displayAction = ({ type }: CardsModification) => {
+const displayAction = ({ type }: CardModification) => {
   switch(type) {
   case "add":
     return "Add Card"
@@ -66,27 +68,46 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }, [decks])
 
   // reset the form, and set index to another deck
-  const deckOnClick = (index: number) => setSelected(switchDeck(index))
+  const deckOnClick = (index: number) => setSelected(selected => {
+    if (selected === null) return cardSelectedSwitchDeck(index)
+    return switchDeck(selected, index)
+  })
+  const deckOnEdit = (index: number) => setSelected(_selected => newEditDeckSelected(index))
 
   const onSubmit = (event: ChangeEvent<HTMLElement>) => {
     event.preventDefault() 
-    if (selected !== null && !isCardEmpty(selected.card)) {
-      setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
-      setSelected(selected => (selected === null ? selected : resetForm(selected)))
+    if (selected === null) return
+    switch (selected.type) {
+    case "card":
+      if (!isCardEmpty(selected.card)) {
+        setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
+        setSelected(selected => (selected === null ? selected : resetForm(selected)))
+      }
+      return 
+    case "edit_deck":
+      if (selected.name !== "") {
+        setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
+        setSelected(selected => (selected === null ? selected : resetForm(selected)))
+      }
     }
   }
 
   const onTextChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null ? null : {...selected, card: {...selected.card, text: e.target.value}})
+    selected => (selected !== null && selected.type === "card" ? {...selected, card: {...selected.card, text: e.target.value}} : null)
   )
 
   const onAnswerChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
-    selected => (selected === null ? null : {...selected, card: {...selected.card, answer: e.target.value}})
+    selected => (selected !== null && selected.type === "card" ? {...selected, card: {...selected.card, answer: e.target.value}} : null)
+  )
+
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => setSelected(
+    selected => (selected !== null && selected.type == "edit_deck" ? {...selected, name: e.target.value} : null)
   )
 
   const edit = (index: number) => {
     setSelected(selected => (selected === null ? null : {
-      ...selected,
+      type: "card",
+      index: index,
       card: decks[selected.index].cards[index],
       action: {
         type: "edit",
@@ -121,7 +142,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   return (
     <div className="p-10">
       <h1 className="text-6xl font-bold my-6">Decks</h1>
-      <Decks removeDeck={removeDeck} deckOnClick={deckOnClick} decks={decks}/>
+      <Decks removeDeck={removeDeck} deckOnEdit={deckOnEdit} deckOnClick={deckOnClick} decks={decks}/>
       {selected !== null && decks.length > 0 ?
         (
           <div className="my-6">
@@ -131,8 +152,12 @@ const MainPage : React.FC<MainPageProps> = (props) => {
               <Cards selected={selected} cards={decks[selected.index].cards} remove={remove} edit={edit}/>
             </div>
             <div>
-              <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
-              <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+              {selected.type === "card" ? 
+                <>
+                  <h1 className="text-5xl font-bold my-6">{displayAction(selected.action)}</h1>
+                  <CardForm card={selected.card} onSubmit={onSubmit} onTextChange={onTextChange} onAnswerChange={onAnswerChange}/>
+                </>:
+                <DeckForm name={selected.name} onSubmit={onSubmit} onNameChange={onNameChange}/>}
             </div>
           </div>
         ) :
