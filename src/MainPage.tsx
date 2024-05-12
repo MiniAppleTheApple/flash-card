@@ -8,7 +8,7 @@ import DeckForm from "./DeckForm"
 import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
 import { submitDeckChange } from "./deck"
-import { newCard, isCardEmpty } from "./card"
+import { isCardEmpty } from "./card"
 import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
 import { cardSelectedSwitchDeck } from "./card_selected"
 
