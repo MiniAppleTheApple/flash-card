@@ -7,7 +7,7 @@ import DeckForm from "./DeckForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
-import { updateDeck } from "./deck"
+import { submitDeckChange } from "./deck"
 import { newCard, isCardEmpty } from "./card"
 import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
 import { cardSelectedSwitchDeck } from "./card_selected"
@@ -34,7 +34,6 @@ function bindOnloadEvent(fileObject: File, deckByName: Map<string, Deck>, setDec
 		if (typeof e?.target?.result === "string") {
 			const parsed = JSON.parse(e.target.result)
 			setDecks(parsed.map((loaded: Deck) => {
-        
 				const cards = (deckByName.get(loaded.name)?.cards ?? []).
 					concat(loaded.cards)
 
@@ -82,13 +81,13 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     switch (selected.type) {
     case "card":
       if (!isCardEmpty(selected.card)) {
-        setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
+        setDecks(decks => updateByIndex(decks, selected.index, deck => submitDeckChange(deck, selected)))
         setSelected(selected => (selected === null ? selected : resetForm(selected)))
       }
       return 
     case "edit_deck":
       if (selected.name !== "") {
-        setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeck(deck, selected)))
+        setDecks(decks => updateByIndex(decks, selected.index, deck => submitDeckChange(deck, selected)))
         setSelected(selected => (selected === null ? selected : resetForm(selected)))
       }
       return

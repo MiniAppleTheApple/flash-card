@@ -1,7 +1,7 @@
 import { updateByIndex } from "./array"
 
 // TODO rename this functio
-function updateDeck(deck: Deck, selected: Selected): Deck {
+function submitDeckChange(deck: Deck, selected: Selected): Deck {
   const { cards } = deck;
   switch (selected.type) {
   case "card":
@@ -23,4 +23,4 @@ function updateDeck(deck: Deck, selected: Selected): Deck {
   
 }
 
-export { updateDeck }
+export { submitDeckChange }
