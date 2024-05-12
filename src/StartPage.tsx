@@ -17,7 +17,7 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
   const [deck, setDeck] = useState<Deck>({...decks[index], cards: shuffle(decks[index].cards)})
   const [isShowed, setIsShowed] = useState<boolean>(false)
 
-  const next = (event: MouseEvent) => {
+  const next = (_event: MouseEvent) => {
     if (deck.cards.length > 1) {
       setDeck({...deck, cards: deck.cards.slice(1, deck.cards.length)})
       setIsShowed(false)
@@ -26,7 +26,7 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
     }
   }
 
-  const showAnswer = (event: MouseEvent) => {
+  const showAnswer = (_event: MouseEvent) => {
     setIsShowed(true)
   }
 
@@ -41,7 +41,7 @@ const StartPage: React.FC<StartPageProps> = ({decks, index, setPage}) => {
         </div> :
         <button className={primaryButton} onClick={showAnswer}>Show answer</button>
       }
-      <button className={secondaryButton} onClick={e => setPage({type: "main", decks})}>Back</button>
+      <button className={secondaryButton} onClick={_e => setPage({type: "main", decks})}>Back</button>
     </div>
   )
 }
