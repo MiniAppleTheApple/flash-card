@@ -10,7 +10,6 @@ import { uniqBy, updateByIndex } from "./array"
 import { submitDeckChange } from "./deck"
 import { isCardEmpty } from "./card"
 import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
-import { cardSelectedSwitchDeck } from "./card_selected"
 
 function newDeck(): Deck {
   return {
@@ -69,7 +68,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }, [decks])
 
   // reset the form, and set index to another deck
-  const deckOnClick = (index: number) => setSelected(selected => switchDeck(index))
+  const deckOnClick = (index: number) => setSelected(_selected => switchDeck(index))
   const deckOnEdit = (index: number) => setSelected(_selected => newEditDeckSelected(index))
 
   const onSubmit = (event: ChangeEvent<HTMLElement>) => {
