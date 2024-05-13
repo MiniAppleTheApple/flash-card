@@ -164,7 +164,7 @@ const MainPage : React.FC<MainPageProps> = (props) => {
         <button className={`${primaryButton} flex-1`} onClick={_e => addNewDeck()}>New</button>
         {file === "" ? "" : <p className={`${secondaryButton} flex-1`}><a href={file} download>Download</a></p>}
       </section>
-      <input className={`${primaryButton} w-max`} type="file" onChange={uploadFile} multiple={false} accept=".json,application/json"></input>
+      <input className={`${primaryButton} w-max`} type="file" onChange={uploadFile} multiple={false} accept=".json,application/json"/>
     </div>
   )
 }
