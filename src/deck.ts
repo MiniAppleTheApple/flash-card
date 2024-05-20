@@ -1,6 +1,5 @@
 import { updateByIndex } from "./array"
 
-// TODO rename this functio
 function updateDeckChange(deck: Deck, selected: Selected): Deck {
   const { cards } = deck;
   switch (selected.type) {
