@@ -1,5 +1,4 @@
 import { newCard } from "./card"
-import { cardSelectedResetForm } from "./card_selected";
 
 function switchDeck(index: number): Selected {
   return {
@@ -17,6 +16,16 @@ function editDeckSelectedResetForm(selected: EditDeckSelected): EditDeckSelected
     ...selected,
     type: "edit_deck",
     name: ""
+  }
+}
+
+function cardSelectedResetForm(selected: CardSelected): CardSelected {
+  return {
+    ...selected,
+    card: newCard(),
+    action: {
+      type: "add",
+    }
   }
 }
 
