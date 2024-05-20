@@ -11,30 +11,22 @@ function switchDeck(index: number): Selected {
   }
 }
 
-function editDeckSelectedResetForm(selected: EditDeckSelected): EditDeckSelected {
-  return {
-    ...selected,
-    type: "edit_deck",
-    name: ""
-  }
-}
-
-function cardSelectedResetForm(selected: CardSelected): CardSelected {
-  return {
-    ...selected,
-    card: newCard(),
-    action: {
-      type: "add",
-    }
-  }
-}
-
 function resetForm(selected: Selected): Selected {
   switch (selected.type) {
   case "card":
-    return cardSelectedResetForm(selected)
+    return {
+      ...selected,
+      card: newCard(),
+      action: {
+        type: "add",
+      }
+    }
   case "edit_deck":
-    return editDeckSelectedResetForm(selected)  
+    return {
+      ...selected,
+      type: "edit_deck",
+      name: ""
+    }
   }
 }
 
