@@ -7,7 +7,7 @@ import DeckForm from "./DeckForm"
 
 import { secondaryButton, primaryButton } from "./utils"
 import { uniqBy, updateByIndex } from "./array"
-import { submitDeckChange } from "./deck"
+import { updateDeckChange } from "./deck"
 import { isCardEmpty } from "./card"
 import { switchDeck, resetForm, newEditDeckSelected } from "./selected"
 
@@ -67,6 +67,11 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     setFile(href)
   }, [decks])
 
+  const updateBasedOnForm =  (selected: Selected) => {
+    setDecks(decks => updateByIndex(decks, selected.index, deck => updateDeckChange(deck, selected)))
+    setSelected(selected => (selected === null ? selected : resetForm(selected)))
+  }
+
   // reset the form, and set index to another deck
   const deckOnClick = (index: number) => setSelected(_selected => switchDeck(index))
   const deckOnEdit = (index: number) => setSelected(_selected => newEditDeckSelected(index))
@@ -77,14 +82,12 @@ const MainPage : React.FC<MainPageProps> = (props) => {
     switch (selected.type) {
     case "card":
       if (!isCardEmpty(selected.card)) {
-        setDecks(decks => updateByIndex(decks, selected.index, deck => submitDeckChange(deck, selected)))
-        setSelected(selected => (selected === null ? selected : resetForm(selected)))
+        updateBasedOnForm(selected)
       }
       return 
     case "edit_deck":
       if (selected.name !== "") {
-        setDecks(decks => updateByIndex(decks, selected.index, deck => submitDeckChange(deck, selected)))
-        setSelected(selected => (selected === null ? selected : resetForm(selected)))
+        updateBasedOnForm(selected)
       }
       return
     }
