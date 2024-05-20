@@ -132,7 +132,9 @@ const MainPage : React.FC<MainPageProps> = (props) => {
   }
 
   const removeDeck = (deckIndex: number): void => {
+    // set form to null
     setSelected(_selected => null)
+    // remove the deck from decks
     setDecks(decks => decks.filter((_x, index) => (deckIndex ?? -1) !== index))
   }
 
