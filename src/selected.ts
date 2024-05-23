@@ -30,11 +30,11 @@ function resetForm(selected: Selected): Selected {
   }
 }
 
-function newEditDeckSelected(index: number): Selected {
+function newEditDeckSelected(index: number, name: string): Selected {
   return {
     index,
     type: "edit_deck",
-    name: "",
+    name: name,
   }
 }
 
