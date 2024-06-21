@@ -107,8 +107,8 @@ const MainPage : React.FC<MainPageProps> = (props) => {
 
   const edit = (index: number) => {
     setSelected(selected => (selected === null ? null : {
+      ...selected,
       type: "card",
-      index: index,
       card: decks[selected.index].cards[index],
       action: {
         type: "edit",

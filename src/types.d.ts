@@ -21,7 +21,7 @@ type CardModification = AddCard | EditCard
 type CardSelected = {
   type: "card",
   card: Card,
-	index: number,
+	index: number, // deck index
 	action: CardModification, 
 }
 
